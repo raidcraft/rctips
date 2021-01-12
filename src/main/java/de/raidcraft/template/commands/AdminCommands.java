@@ -1,13 +1,13 @@
 package de.raidcraft.template.commands;
 
 import co.aikar.commands.BaseCommand;
-import de.raidcraft.template.PluginTemplate;
+import de.raidcraft.template.RCTips;
 
 public class AdminCommands extends BaseCommand {
 
-    private final PluginTemplate plugin;
+    private final RCTips plugin;
 
-    public AdminCommands(PluginTemplate plugin) {
+    public AdminCommands(RCTips plugin) {
         this.plugin = plugin;
     }
 }
