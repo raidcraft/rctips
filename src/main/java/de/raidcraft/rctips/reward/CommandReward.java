@@ -1,6 +1,6 @@
-package de.raidcraft.template.reward;
+package de.raidcraft.rctips.reward;
 
-import de.raidcraft.template.tip.Tip;
+import de.raidcraft.rctips.tip.Tip;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

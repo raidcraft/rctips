@@ -1,4 +1,4 @@
-package de.raidcraft.template.reward;
+package de.raidcraft.rctips.reward;
 
 public abstract class AbstractReward implements Reward {
 

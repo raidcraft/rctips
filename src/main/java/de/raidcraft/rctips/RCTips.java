@@ -1,9 +1,10 @@
-package de.raidcraft.template;
+package de.raidcraft.rctips;
 
 import co.aikar.commands.PaperCommandManager;
-import de.raidcraft.template.commands.AdminCommands;
-import de.raidcraft.template.commands.PlayerCommands;
-import de.raidcraft.template.tip.Tip;
+import de.raidcraft.rctips.commands.AdminCommands;
+import de.raidcraft.rctips.commands.PlayerCommands;
+import de.raidcraft.rctips.manager.TipManager;
+import de.raidcraft.rctips.tables.TAcceptedTip;
 import io.ebean.Database;
 import kr.entree.spigradle.annotations.PluginMain;
 import lombok.AccessLevel;
@@ -90,7 +91,7 @@ public class RCTips extends JavaPlugin {
 
         this.database = new EbeanWrapper(Config.builder(this)
                 .entities(
-                        // TODO: add your database entities here
+                        TAcceptedTip.class
                 )
                 .build()).connect();
     }

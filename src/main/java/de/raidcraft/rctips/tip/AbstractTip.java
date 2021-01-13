@@ -1,6 +1,6 @@
-package de.raidcraft.template.tip;
+package de.raidcraft.rctips.tip;
 
-import de.raidcraft.template.reward.Reward;
+import de.raidcraft.rctips.reward.Reward;
 
 public abstract class AbstractTip implements Tip {
 

@@ -1,7 +1,7 @@
-package de.raidcraft.template.commands;
+package de.raidcraft.rctips.commands;
 
 import co.aikar.commands.BaseCommand;
-import de.raidcraft.template.RCTips;
+import de.raidcraft.rctips.RCTips;
 
 public class AdminCommands extends BaseCommand {
 

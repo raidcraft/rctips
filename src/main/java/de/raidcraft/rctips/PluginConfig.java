@@ -1,13 +1,13 @@
-package de.raidcraft.template;
+package de.raidcraft.rctips;
 
 import de.exlll.configlib.annotation.Comment;
 import de.exlll.configlib.annotation.ConfigurationElement;
 import de.exlll.configlib.annotation.ElementType;
 import de.exlll.configlib.configs.yaml.BukkitYamlConfiguration;
 import de.exlll.configlib.format.FieldNameFormatters;
-import de.raidcraft.template.reward.CommandReward;
-import de.raidcraft.template.reward.Reward;
-import de.raidcraft.template.tip.ConfiguredTip;
+import de.raidcraft.rctips.reward.CommandReward;
+import de.raidcraft.rctips.reward.Reward;
+import de.raidcraft.rctips.tip.ConfiguredTip;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,11 +31,14 @@ public class PluginConfig extends BukkitYamlConfiguration {
     @Comment("Minimum delay between tips in seconds")
     private int minimumTipDelay = 60*2;
 
-    @Comment("Maximum delay between tips")
+    @Comment("Maximum delay between tips in seconds")
     private int maximumTipDelay = 60*30;
 
-    @Comment("Added tip delay for each accepted tip (with more accepted tips they will become more rare)")
+    @Comment("Added tip delay for each accepted tip in seconds")
     private int additionalAcceptedTipDelay = 30;
+
+    @Comment("Prefix for chat hints")
+    private String tipPrefix = "&dTipp: &b";
 
     @ElementType(TipConfiguration.class)
     private Map<String, TipConfiguration> tips = new HashMap<>();

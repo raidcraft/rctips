@@ -1,9 +1,6 @@
-package de.raidcraft.template.tip;
+package de.raidcraft.rctips.tip;
 
-import de.raidcraft.template.PluginConfig;
-import de.raidcraft.template.RCTips;
-import de.raidcraft.template.reward.CommandReward;
-import de.raidcraft.template.reward.Reward;
+import de.raidcraft.rctips.PluginConfig;
 
 public class ConfiguredTip extends AbstractTip {
 
