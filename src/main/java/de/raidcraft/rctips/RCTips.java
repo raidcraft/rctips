@@ -32,6 +32,8 @@ public class RCTips extends JavaPlugin {
     private PluginConfig pluginConfig;
 
     private PaperCommandManager commandManager;
+
+    @Getter
     private TipManager tipManager;
 
     @Getter
@@ -65,6 +67,7 @@ public class RCTips extends JavaPlugin {
     public void reload() {
 
         loadConfig();
+        tipManager.reload();
     }
 
     private void loadConfig() {

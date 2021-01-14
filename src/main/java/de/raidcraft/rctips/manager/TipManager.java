@@ -64,13 +64,28 @@ public class TipManager implements Runnable {
         return acceptedTipIds.contains(tip.getId());
     }
 
-    public void acceptTip(Tip tip, Player player) {
+    public int getLoadedTipCount() {
+
+        return configuredTips.size();
+    }
+
+    public Tip getTip(String tipId) {
+
+        for(Tip tip : configuredTips) {
+            if(!tip.getId().equalsIgnoreCase(tipId)) continue;
+            return tip;
+        }
+
+        return null;
+    }
+
+    public boolean acceptTip(Tip tip, Player player) {
 
         Set<String> acceptedTipIds = getAcceptedTipIds(player.getUniqueId());
 
         // Check if already accepted
         if(hasAccepted(tip, player.getUniqueId())) {
-            return;
+            return false;
         }
 
         // Save in database
@@ -85,6 +100,8 @@ public class TipManager implements Runnable {
         if(reward != null) {
             reward.credit(tip, player);
         }
+
+        return true;
     }
 
     private Tip getNextTip(UUID player) {
@@ -101,7 +118,12 @@ public class TipManager implements Runnable {
 
         Tip tip = getNextTip(player.getUniqueId());
 
-        if(tip == null) return;
+        if(tip == null) {
+            plugin.getLogger().info("No tip left for " + player.getName());
+            return;
+        }
+
+        lastTip.put(player.getUniqueId(), System.currentTimeMillis());
 
         Messages.tip(player, tip);
     }
@@ -127,6 +149,8 @@ public class TipManager implements Runnable {
             delaySeconds = pluginConfig.getMaximumTipDelay();
         }
 
+        plugin.getLogger().info("Tip delay for " + player.getName() + ": " + delaySeconds + "s");
+
         // Check if tip delay not reached
         if(System.currentTimeMillis() - playersLastTip < SEC_TO_MS(delaySeconds)) {
             return false;
@@ -140,7 +164,9 @@ public class TipManager implements Runnable {
 
         for(Player player : Bukkit.getOnlinePlayers()) {
 
-            if(!isTipTime(player)) continue;
+            if(!isTipTime(player)) {
+                continue;
+            }
 
             sendNextTip(player);
         }

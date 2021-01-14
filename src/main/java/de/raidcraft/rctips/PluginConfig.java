@@ -59,13 +59,19 @@ public class PluginConfig extends BukkitYamlConfiguration {
 
     public Reward getRewardById(String id) {
 
+        RCTips.instance().getLogger().info("GetRewardById: " + id);
+
         for(Map.Entry<String, RewardConfiguration> entry : rewards.entrySet()) {
 
+            RCTips.instance().getLogger().info("Next reward to check: " + entry.getKey());
+
             if(entry.getKey().equalsIgnoreCase(id)) {
-                return new CommandReward(entry.getValue().getDescription(), entry.getValue().getCommand());
+                RewardConfiguration config = entry.getValue();
+                return new CommandReward(config.getName(), config.getDescription(), config.getCommand());
             }
         }
 
+        RCTips.instance().getLogger().info("No Reward found for ID: " + id);
         return null;
     }
 
@@ -84,26 +90,29 @@ public class PluginConfig extends BukkitYamlConfiguration {
     @Getter
     public static class RewardConfiguration {
 
-        private String description;
-        private String command;
+        public RewardConfiguration() {
+        }
+
+        private String name = "";
+        private String description = "";
+        private String command = "";
     }
 
     @ConfigurationElement
     @Getter
     public static class TipConfiguration {
 
-        private String name;
-        private String text;
-        private int minAccepted;
-        private String rewardId;
-        private int intervalSec;
+        private String name = "";
+        private String text = "";
+        private String reward = "";
 
         public TipConfiguration() {
         }
 
         public Reward getReward() {
 
-            return RCTips.instance().getPluginConfig().getRewardById(rewardId);
+            RCTips.instance().getLogger().info("getReward '" + reward + "' for tip '" + name + "'");
+            return RCTips.instance().getPluginConfig().getRewardById(reward);
         }
     }
 }

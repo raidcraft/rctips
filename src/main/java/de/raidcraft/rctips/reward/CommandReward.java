@@ -13,8 +13,8 @@ public class CommandReward extends AbstractReward {
      */
     private String command;
 
-    public CommandReward(String description, String command) {
-        super(description);
+    public CommandReward(String name, String description, String command) {
+        super(name, description);
         this.command = command;
     }
 
@@ -22,7 +22,7 @@ public class CommandReward extends AbstractReward {
     public void credit(Tip tip, Player player) {
 
         String preparedCommand = command;
-        preparedCommand = preparedCommand.replace("%player", player.getName());
+        preparedCommand = preparedCommand.replace("%player%", player.getName());
         preparedCommand = preparedCommand.replace("%tip%", tip.getName());
 
         Bukkit.getConsoleSender().sendMessage("/" + preparedCommand);
