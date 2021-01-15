@@ -3,6 +3,7 @@ package de.raidcraft.rctips;
 import de.raidcraft.rctips.commands.PlayerCommands;
 import de.raidcraft.rctips.reward.Reward;
 import de.raidcraft.rctips.tip.Tip;
+import de.raidcraft.rctips.util.UrlParser;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -17,6 +18,7 @@ import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 import static de.raidcraft.rctips.Messages.Colors.*;
 import static net.kyori.adventure.text.Component.*;
@@ -29,7 +31,9 @@ public final class Messages {
 
     public static final class Colors {
 
-        public static final TextColor ACCEPT_BUTTON = GREEN;
+        public static final TextColor PREFIX = LIGHT_PURPLE;
+        public static final TextColor TIPP_TEXT = AQUA;
+        public static final TextColor ACCEPT_BUTTON = RED;
         public static final TextColor REWARD_TOOLTIP_DESC = YELLOW;
         public static final TextColor REWARD_TOOLTIP_DESC_ACCENT = GREEN;
         public static final TextColor ACCEPT_MESSAGE = GREEN;
@@ -39,18 +43,6 @@ public final class Messages {
     }
 
     private Messages() {}
-
-    public static String parseColor(String line) {
-
-        String regex = "&(?<!&&)(?=%c)";
-        Formatter fmt;
-        for (ChatColor clr : ChatColor.values()) {
-            char code = clr.getChar();
-            fmt = new Formatter();
-            line = line.replaceAll(fmt.format(regex, code).toString(), "\u00A7");
-        }
-        return line.replace("&&", "&");
-    }
 
     public static void send(UUID playerId, Component message) {
         if (RCTips.isTesting()) return;
@@ -103,12 +95,21 @@ public final class Messages {
 
         TextComponent.Builder builder = text();
 
-        String tipText = RCTips.instance().getPluginConfig().getTipPrefix() + tip.getText() + " ";
-        tipText = parseColor(tipText);
+        builder.append(text("Tipp ", PREFIX));
 
         // Detect URL
-        // TODO
-        builder.append(text(tipText));
+        UrlParser urlParser = new UrlParser(tip.getText());
+        if(urlParser.containsUrl()) {
+            builder.append(text(urlParser.getPreUrl(), TIPP_TEXT))
+                    .append(
+                            text(urlParser.getUrl(), TIPP_TEXT, ITALIC, UNDERLINED)
+                                    .clickEvent(openUrl(urlParser.getUrl())))
+                    .append(text(urlParser.getPostUrl(), TIPP_TEXT));
+        } else {
+            builder.append(text(tip.getText(), TIPP_TEXT));
+        }
+
+        builder.append(text(" "));
 
         return builder.build();
     }

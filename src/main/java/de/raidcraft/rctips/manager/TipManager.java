@@ -177,6 +177,8 @@ public class TipManager implements Runnable {
 
         for(Player player : Bukkit.getOnlinePlayers()) {
 
+            if(!player.hasPermission("rctips.tip.receive")) continue;
+
             if(!isTipTime(player)) {
                 continue;
             }

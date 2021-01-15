@@ -5,6 +5,7 @@ import be.seeseemelk.mockbukkit.ServerMock;
 import de.raidcraft.rctips.RCTips;
 import de.raidcraft.rctips.reward.Reward;
 import de.raidcraft.rctips.tip.Tip;
+import de.raidcraft.rctips.util.UrlParser;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,5 +84,29 @@ public class UnitTests {
 
             lastTip = tip;
         } while(lastTip != null);
+    }
+
+    @Test
+    @DisplayName("should find url")
+    void findUrl() {
+
+        String urlString = "Dynmap erreichbar unter https://map.raid-craft.de";
+        UrlParser urlParser = new UrlParser(urlString);
+
+        assertThat(urlParser.containsUrl()).isTrue();
+        assertThat(urlParser.getPreUrl().equals("Dynmap erreichbar unter ")).isTrue();
+        assertThat(urlParser.getPostUrl().equals("")).isTrue();
+    }
+
+    @Test
+    @DisplayName("should not find url")
+    void noUrl() {
+
+        String urlString = "Dynmap erreichbar unter hps:/p.raid-craft.de";
+        UrlParser urlParser = new UrlParser(urlString);
+
+        assertThat(urlParser.containsUrl()).isFalse();
+        assertThat(urlParser.getPreUrl() == null).isTrue();
+        assertThat(urlParser.getPostUrl() == null).isTrue();
     }
 }
