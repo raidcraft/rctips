@@ -6,6 +6,7 @@ public class ConfiguredTip extends AbstractTip {
 
     public ConfiguredTip(String id, PluginConfig.TipConfiguration tipConfiguration) {
 
-        super(id, tipConfiguration.getName(), tipConfiguration.getText(), tipConfiguration.getReward());
+        super(id, tipConfiguration.getWeight(), tipConfiguration.getName(),
+                tipConfiguration.getText(), tipConfiguration.getReward());
     }
 }

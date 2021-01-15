@@ -33,6 +33,10 @@ public class TAcceptedTip extends BaseEntity {
         Set<TAcceptedTip> tips = find.query().where().eq("player", player).findSet();
 
         return tips.stream().map(tip -> tip.tipId).collect(Collectors.toSet());
+    }
 
+    public static void purgePlayer(UUID player) {
+
+        find.query().where().eq("player", player).delete();
     }
 }

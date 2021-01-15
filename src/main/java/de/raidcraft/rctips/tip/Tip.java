@@ -6,6 +6,8 @@ public interface Tip {
 
     String getId();
 
+    int getWeight();
+
     String getName();
 
     String getText();

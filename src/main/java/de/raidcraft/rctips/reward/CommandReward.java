@@ -1,5 +1,6 @@
 package de.raidcraft.rctips.reward;
 
+import com.google.common.base.Strings;
 import de.raidcraft.rctips.tip.Tip;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,10 +22,12 @@ public class CommandReward extends AbstractReward {
     @Override
     public void credit(Tip tip, Player player) {
 
+        if(Strings.isNullOrEmpty(command)) return;
+
         String preparedCommand = command;
         preparedCommand = preparedCommand.replace("%player%", player.getName());
         preparedCommand = preparedCommand.replace("%tip%", tip.getName());
 
-        Bukkit.getConsoleSender().sendMessage("/" + preparedCommand);
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),preparedCommand);
     }
 }

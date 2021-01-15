@@ -57,16 +57,32 @@ public class TipManager implements Runnable {
         return acceptedTips.get(player);
     }
 
-    private boolean hasAccepted(Tip tip, UUID player) {
+    public boolean hasAccepted(Tip tip, UUID player) {
 
         Set<String> acceptedTipIds = getAcceptedTipIds(player);
 
         return acceptedTipIds.contains(tip.getId());
     }
 
+    public int purge(UUID player) {
+
+        Set<String> tips = getAcceptedTipIds(player);
+        int accepted = tips.size();
+        acceptedTips.remove(player);
+
+        TAcceptedTip.purgePlayer(player);
+
+        return accepted;
+    }
+
     public int getLoadedTipCount() {
 
         return configuredTips.size();
+    }
+
+    public List<Tip> getAllTips() {
+
+        return configuredTips;
     }
 
     public Tip getTip(String tipId) {
@@ -104,7 +120,7 @@ public class TipManager implements Runnable {
         return true;
     }
 
-    private Tip getNextTip(UUID player) {
+    public Tip getNextTip(UUID player) {
 
         for(Tip tip : configuredTips) {
             if(hasAccepted(tip, player)) continue;
@@ -119,13 +135,12 @@ public class TipManager implements Runnable {
         Tip tip = getNextTip(player.getUniqueId());
 
         if(tip == null) {
-            plugin.getLogger().info("No tip left for " + player.getName());
             return;
         }
 
         lastTip.put(player.getUniqueId(), System.currentTimeMillis());
 
-        Messages.tip(player, tip);
+        Messages.tip(player, tip, true);
     }
 
     private boolean isTipTime(Player player) {
@@ -148,8 +163,6 @@ public class TipManager implements Runnable {
         if(delaySeconds > pluginConfig.getMaximumTipDelay()) {
             delaySeconds = pluginConfig.getMaximumTipDelay();
         }
-
-        plugin.getLogger().info("Tip delay for " + player.getName() + ": " + delaySeconds + "s");
 
         // Check if tip delay not reached
         if(System.currentTimeMillis() - playersLastTip < SEC_TO_MS(delaySeconds)) {

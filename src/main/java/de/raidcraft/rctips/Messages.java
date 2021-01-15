@@ -8,16 +8,20 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.feature.pagination.Pagination;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.w3c.dom.stylesheets.LinkStyle;
 
-import java.util.Formatter;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static de.raidcraft.rctips.Messages.Colors.*;
 import static net.kyori.adventure.text.Component.*;
-import static net.kyori.adventure.text.event.ClickEvent.runCommand;
+import static net.kyori.adventure.text.event.ClickEvent.*;
+import static net.kyori.adventure.text.event.HoverEvent.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 import static net.kyori.adventure.text.format.TextDecoration.*;
 
@@ -25,8 +29,13 @@ public final class Messages {
 
     public static final class Colors {
 
-        public static final TextColor ACCEPT = RED;
+        public static final TextColor ACCEPT_BUTTON = GREEN;
         public static final TextColor REWARD_TOOLTIP_DESC = YELLOW;
+        public static final TextColor REWARD_TOOLTIP_DESC_ACCENT = GREEN;
+        public static final TextColor ACCEPT_MESSAGE = GREEN;
+        public static final TextColor ALREADY_ACCEPTED = RED;
+        public static final TextColor LIST_HEADING = DARK_AQUA;
+        public static final TextColor HIGHLIGHT = AQUA;
     }
 
     private Messages() {}
@@ -65,36 +74,90 @@ public final class Messages {
 
         TextComponent.Builder builder = text();
 
+        builder.append(text("Klicke hier um diesen Tipp", REWARD_TOOLTIP_DESC))
+                .append(newline())
+                .append(text("nicht mehr anzuzeigen", REWARD_TOOLTIP_DESC))
+                .append(newline()).append(newline());
         builder.append(
-                text("Klicke hier um diesen Tipp nicht mehr anzuzeigen", REWARD_TOOLTIP_DESC))
+                text("Erhalte als Belohnung ", REWARD_TOOLTIP_DESC_ACCENT))
                 .append(newline());
         builder.append(
-                text("Erhalte als Belohnung ", REWARD_TOOLTIP_DESC));
-        builder.append(
-                text(reward.getDescription(), REWARD_TOOLTIP_DESC, BOLD));
+                text(reward.getDescription(), REWARD_TOOLTIP_DESC_ACCENT, BOLD));
 
         return builder.build();
     }
 
-    public static void tip(Player player, Tip tip) {
+    public static void tipAccepted(Player player, Tip tip) {
+
+        TextComponent.Builder builder = text();
+
+        builder.append(text("Du hast als Tipp-Belohnung ", ACCEPT_MESSAGE));
+        builder.append(text(tip.getReward().getDescription(), ACCEPT_MESSAGE, BOLD));
+        builder.append(text(" erhalten", ACCEPT_MESSAGE));
+        Component component = builder.build();
+
+        send(player, component);
+    }
+
+    private static Component tipContent(Tip tip) {
 
         TextComponent.Builder builder = text();
 
         String tipText = RCTips.instance().getPluginConfig().getTipPrefix() + tip.getText() + " ";
         tipText = parseColor(tipText);
 
+        // Detect URL
+        // TODO
         builder.append(text(tipText));
 
+        return builder.build();
+    }
+
+    public static void tip(Player player, Tip tip, boolean rewardable) {
+
+        TextComponent.Builder builder = text();
+
+        // Append main tip content
+        builder.append(tipContent(tip));
+
         Reward reward = tip.getReward();
-        if(reward != null) {
-            ClickEvent acceptEvent = runCommand(PlayerCommands.acceptTip() + " " + tip.getId() + " " + player.getName());
-            builder.append(text("OK", ACCEPT, ITALIC, BOLD, UNDERLINED)
-                    .clickEvent(acceptEvent)
-                    .hoverEvent(rewardInfo(reward)));
+        if(rewardable && reward != null) {
+            if(!RCTips.instance().getTipManager().hasAccepted(tip, player.getUniqueId())) {
+                ClickEvent acceptEvent = runCommand(
+                        PlayerCommands.acceptTip() + " " + tip.getId() + " " + player.getName());
+                builder.append(text("OK", ACCEPT_BUTTON, ITALIC, BOLD, UNDERLINED)
+                        .clickEvent(acceptEvent)
+                        .hoverEvent(rewardInfo(reward)));
+            } else {
+                builder.append(text("OK", ACCEPT_BUTTON, ITALIC, BOLD, STRIKETHROUGH)
+                        .hoverEvent(
+                                showText(text("Du hast diesen Tipp bereits akzeptiert", ALREADY_ACCEPTED))));
+            }
         }
 
         Component component = builder.build();
 
         send(player, component);
+    }
+
+    public static void tipList(Player player, List<Tip> tips, int page) {
+
+        List<Component> components = Pagination.builder()
+                .resultsPerPage(10)
+                .build(text("Alle Tipps", LIST_HEADING), new Pagination.Renderer.RowRenderer<Tip>() {
+                    @Override
+                    public @NonNull Collection<Component> renderRow(@Nullable Tip tip, int index) {
+
+                        if (tip == null) return Collections.singleton(empty());
+
+                        return Collections.singleton(text()
+                                .append(text((index + 1) + ". ", HIGHLIGHT))
+                                .append(tipContent(tip))
+                                .build());
+                    }
+                }, p -> PlayerCommands.listTipps() + " " + p)
+                .render(tips, page);
+
+        components.forEach(component -> send(player, component));
     }
 }
