@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/raidcraft/rctips/compare/v1.1.0...v1.2.0) (2021-01-15)
+
+
+### Features
+
+* Add URL parser if tip text contains url ([2715e2d](https://github.com/raidcraft/rctips/commit/2715e2da84070ac460847cbb7437a4c8bf7f90db))
+
 # [1.1.0](https://github.com/raidcraft/rctips/compare/v1.0.1...v1.1.0) (2021-01-15)
 
 
