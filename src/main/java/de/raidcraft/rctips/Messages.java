@@ -68,13 +68,16 @@ public final class Messages {
 
         builder.append(text("Klicke hier um diesen Tipp", REWARD_TOOLTIP_DESC))
                 .append(newline())
-                .append(text("nicht mehr anzuzeigen", REWARD_TOOLTIP_DESC))
-                .append(newline()).append(newline());
-        builder.append(
-                text("Erhalte als Belohnung ", REWARD_TOOLTIP_DESC_ACCENT))
-                .append(newline());
-        builder.append(
-                text(reward.getDescription(), REWARD_TOOLTIP_DESC_ACCENT, BOLD));
+                .append(text("nicht mehr anzuzeigen", REWARD_TOOLTIP_DESC));
+
+        if(reward != null) {
+            builder.append(newline()).append(newline());
+            builder.append(
+                    text("Erhalte als Belohnung ", REWARD_TOOLTIP_DESC_ACCENT))
+                    .append(newline());
+            builder.append(
+                    text(reward.getDescription(), REWARD_TOOLTIP_DESC_ACCENT, BOLD));
+        }
 
         return builder.build();
     }
@@ -95,7 +98,7 @@ public final class Messages {
 
         TextComponent.Builder builder = text();
 
-        builder.append(text("Tipp ", PREFIX));
+        builder.append(text("Tipp: ", PREFIX));
 
         // Detect URL
         UrlParser urlParser = new UrlParser(tip.getText());
@@ -103,6 +106,7 @@ public final class Messages {
             builder.append(text(urlParser.getPreUrl(), TIPP_TEXT))
                     .append(
                             text(urlParser.getUrl(), TIPP_TEXT, ITALIC, UNDERLINED)
+                                    .hoverEvent(showText(text("Besuche " + urlParser.getUrl())))
                                     .clickEvent(openUrl(urlParser.getUrl())))
                     .append(text(urlParser.getPostUrl(), TIPP_TEXT));
         } else {
@@ -110,6 +114,23 @@ public final class Messages {
         }
 
         builder.append(text(" "));
+
+        return builder.build();
+    }
+
+    private static Component tipState(UUID player, Tip tip) {
+
+        TextComponent.Builder builder = text();
+
+        if(RCTips.instance().getTipManager().hasAccepted(tip, player)) {
+            builder.append(text("\u2713", ACCEPT_MESSAGE, BOLD)
+                .hoverEvent(
+                    showText(text("Du hast diesen Tipp bereits akzeptiert", REWARD_TOOLTIP_DESC))));
+        } else {
+            builder.append(text("X", ALREADY_ACCEPTED, BOLD)
+                .hoverEvent(
+                    showText(text("Du hast diesen Tipp noch nicht akzeptiert", REWARD_TOOLTIP_DESC))));
+        }
 
         return builder.build();
     }
@@ -122,18 +143,21 @@ public final class Messages {
         builder.append(tipContent(tip));
 
         Reward reward = tip.getReward();
-        if(rewardable && reward != null) {
-            if(!RCTips.instance().getTipManager().hasAccepted(tip, player.getUniqueId())) {
+        if(!RCTips.instance().getTipManager().hasAccepted(tip, player.getUniqueId())) {
+            TextComponent textComponent = text("OK", ACCEPT_BUTTON, ITALIC, BOLD, UNDERLINED)
+                    .hoverEvent(rewardInfo(reward));
+
+            if(rewardable && reward != null) {
                 ClickEvent acceptEvent = runCommand(
                         PlayerCommands.acceptTip() + " " + tip.getId() + " " + player.getName());
-                builder.append(text("OK", ACCEPT_BUTTON, ITALIC, BOLD, UNDERLINED)
-                        .clickEvent(acceptEvent)
-                        .hoverEvent(rewardInfo(reward)));
+                builder.append(textComponent.clickEvent(acceptEvent));
             } else {
-                builder.append(text("OK", ACCEPT_BUTTON, ITALIC, BOLD, STRIKETHROUGH)
-                        .hoverEvent(
-                                showText(text("Du hast diesen Tipp bereits akzeptiert", ALREADY_ACCEPTED))));
+                builder.append(textComponent);
             }
+        } else {
+            builder.append(text("OK", ACCEPT_BUTTON, ITALIC, BOLD, STRIKETHROUGH)
+                    .hoverEvent(
+                            showText(text("Du hast diesen Tipp bereits akzeptiert", ALREADY_ACCEPTED))));
         }
 
         Component component = builder.build();
@@ -154,6 +178,7 @@ public final class Messages {
                         return Collections.singleton(text()
                                 .append(text((index + 1) + ". ", HIGHLIGHT))
                                 .append(tipContent(tip))
+                                .append(tipState(player.getUniqueId(), tip))
                                 .build());
                     }
                 }, p -> PlayerCommands.listTipps() + " " + p)

@@ -36,9 +36,6 @@ public class PluginConfig extends BukkitYamlConfiguration {
     @Comment("Added tip delay for each accepted tip in seconds")
     private int additionalAcceptedTipDelay = 30;
 
-    @Comment("Prefix for chat hints")
-    private String tipPrefix = "&dTipp: &b";
-
     @ElementType(TipConfiguration.class)
     private Map<String, TipConfiguration> tips = new HashMap<>();
 
