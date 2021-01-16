@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/raidcraft/rctips/compare/v1.2.0...v1.2.1) (2021-01-16)
+
+
+### Bug Fixes
+
+* Improve plugin config and fix messaging ([324dde7](https://github.com/raidcraft/rctips/commit/324dde7cfee456f353f4914b520516bd798dbd15))
+
 # [1.2.0](https://github.com/raidcraft/rctips/compare/v1.1.0...v1.2.0) (2021-01-15)
 
 
