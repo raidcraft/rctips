@@ -140,7 +140,7 @@ public class TipManager implements Runnable {
 
         lastTip.put(player.getUniqueId(), System.currentTimeMillis());
 
-        Messages.tip(player, tip, true);
+        Messages.tip(player, tip);
     }
 
     private boolean isTipTime(Player player) {

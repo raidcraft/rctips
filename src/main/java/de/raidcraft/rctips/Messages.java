@@ -1,8 +1,10 @@
 package de.raidcraft.rctips;
 
 import de.raidcraft.rctips.commands.PlayerCommands;
+import de.raidcraft.rctips.reward.CommandReward;
 import de.raidcraft.rctips.reward.Reward;
 import de.raidcraft.rctips.tip.Tip;
+import de.raidcraft.rctips.util.CommandParser;
 import de.raidcraft.rctips.util.UrlParser;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -84,13 +86,20 @@ public final class Messages {
 
     public static void tipAccepted(Player player, Tip tip) {
 
+        Reward reward = tip.getReward();
+
+
         TextComponent.Builder builder = text();
 
-        builder.append(text("Du hast als Tipp-Belohnung ", ACCEPT_MESSAGE));
-        builder.append(text(tip.getReward().getDescription(), ACCEPT_MESSAGE, BOLD));
-        builder.append(text(" erhalten", ACCEPT_MESSAGE));
-        Component component = builder.build();
+        if(reward != null) {
+            builder.append(text("Du hast als Tipp-Belohnung ", ACCEPT_MESSAGE));
+            builder.append(text(tip.getReward().getDescription(), ACCEPT_MESSAGE, BOLD));
+            builder.append(text(" erhalten", ACCEPT_MESSAGE));
+        } else {
+            builder.append(text("Du hast den Tipp akzeptiert"));
+        }
 
+        Component component = builder.build();
         send(player, component);
     }
 
@@ -100,8 +109,13 @@ public final class Messages {
 
         builder.append(text("Tipp: ", PREFIX));
 
+        // TODO: Generic parsers
+
         // Detect URL
         UrlParser urlParser = new UrlParser(tip.getText());
+        // Detect command
+        CommandParser cmdParser = new CommandParser(tip.getText());
+
         if(urlParser.containsUrl()) {
             builder.append(text(urlParser.getPreUrl(), TIPP_TEXT))
                     .append(
@@ -109,6 +123,14 @@ public final class Messages {
                                     .hoverEvent(showText(text("Besuche " + urlParser.getUrl())))
                                     .clickEvent(openUrl(urlParser.getUrl())))
                     .append(text(urlParser.getPostUrl(), TIPP_TEXT));
+        } else if(cmdParser.containsCommand()) {
+            builder.append(text(cmdParser.getPreCommand(), TIPP_TEXT))
+                    .append(
+                            text(cmdParser.getCommand(), TIPP_TEXT, ITALIC, UNDERLINED)
+                                    .hoverEvent(showText(
+                                            text("Führe " + cmdParser.getCommand() + " aus")))
+                                    .clickEvent(runCommand(cmdParser.getCommand())))
+                    .append(text(cmdParser.getPostCommand(), TIPP_TEXT));
         } else {
             builder.append(text(tip.getText(), TIPP_TEXT));
         }
@@ -135,7 +157,7 @@ public final class Messages {
         return builder.build();
     }
 
-    public static void tip(Player player, Tip tip, boolean rewardable) {
+    public static void tip(Player player, Tip tip) {
 
         TextComponent.Builder builder = text();
 
@@ -147,13 +169,9 @@ public final class Messages {
             TextComponent textComponent = text("OK", ACCEPT_BUTTON, ITALIC, BOLD, UNDERLINED)
                     .hoverEvent(rewardInfo(reward));
 
-            if(rewardable && reward != null) {
-                ClickEvent acceptEvent = runCommand(
-                        PlayerCommands.acceptTip() + " " + tip.getId() + " " + player.getName());
-                builder.append(textComponent.clickEvent(acceptEvent));
-            } else {
-                builder.append(textComponent);
-            }
+            ClickEvent acceptEvent = runCommand(
+                    PlayerCommands.acceptTip() + " " + tip.getId() + " " + player.getName());
+            builder.append(textComponent.clickEvent(acceptEvent));
         } else {
             builder.append(text("OK", ACCEPT_BUTTON, ITALIC, BOLD, STRIKETHROUGH)
                     .hoverEvent(

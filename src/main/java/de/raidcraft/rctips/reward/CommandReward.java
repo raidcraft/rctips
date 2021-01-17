@@ -26,7 +26,7 @@ public class CommandReward extends AbstractReward {
 
         String preparedCommand = command;
         preparedCommand = preparedCommand.replace("%player%", player.getName());
-        preparedCommand = preparedCommand.replace("%tip%", tip.getName());
+        preparedCommand = preparedCommand.replace("%tip%", tip.getId());
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),preparedCommand);
     }

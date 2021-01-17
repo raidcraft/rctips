@@ -9,6 +9,7 @@ import de.exlll.configlib.configs.yaml.BukkitYamlConfiguration;
 import de.exlll.configlib.format.FieldNameFormatters;
 import de.raidcraft.rctips.reward.CommandReward;
 import de.raidcraft.rctips.reward.Reward;
+import de.raidcraft.rctips.tip.AbstractTip;
 import de.raidcraft.rctips.tip.ConfiguredTip;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,7 +38,7 @@ public class PluginConfig extends BukkitYamlConfiguration {
     private int additionalAcceptedTipDelay = 30;
 
     @ElementType(TipConfiguration.class)
-    private Map<String, TipConfiguration> tips = new HashMap<>();
+    private Map<Integer, TipConfiguration> tips = new HashMap<>();
 
     @ElementType(RewardConfiguration.class)
     private Map<String, RewardConfiguration> rewards = new HashMap<>();
@@ -45,22 +46,22 @@ public class PluginConfig extends BukkitYamlConfiguration {
     public List<ConfiguredTip> getTips() {
         List<ConfiguredTip> configuredTips = new ArrayList<>();
 
-        for(Map.Entry<String, TipConfiguration> entry : tips.entrySet()) {
+        for(Map.Entry<Integer, TipConfiguration> entry : tips.entrySet()) {
 
             configuredTips.add(new ConfiguredTip(entry.getKey(), entry.getValue()));
         }
 
         // Order by weight
-        configuredTips.sort((o1, o2) -> Integer.compare(o1.getWeight(), o2.getWeight()));
+        configuredTips.sort(Comparator.comparingInt(AbstractTip::getWeight));
 
         return configuredTips;
     }
 
-    public void addTip(String id, int weight, String name, String text, String reward) {
+    public void addTip(String id, int weight, String text, String reward) {
 
-        TipConfiguration tipConfiguration = new TipConfiguration(weight, name, text, reward);
+        TipConfiguration tipConfiguration = new TipConfiguration(id, text, reward);
 
-        tips.put(id, tipConfiguration);
+        tips.put(weight, tipConfiguration);
     }
 
     public void addReward(String id, String name, String description, String command) {
@@ -138,17 +139,15 @@ public class PluginConfig extends BukkitYamlConfiguration {
     @Getter
     public static class TipConfiguration {
 
-        private int weight = 0;
-        private String name = "";
+        private String id = "";
         private String text = "";
         private String reward = "";
 
         public TipConfiguration() {
         }
 
-        public TipConfiguration(int weight, String name, String text, String reward) {
-            this.weight = weight;
-            this.name = name;
+        public TipConfiguration(String id, String text, String reward) {
+            this.id = id;
             this.text = text;
             this.reward = reward;
         }

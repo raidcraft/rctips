@@ -60,7 +60,7 @@ public class UnitTests {
         Player player = server.addPlayer();
 
         for(int i = 0; i < 10; i++) {
-            plugin.getPluginConfig().addTip("tip-id-" + i, i, "name-" + i, "desc", "");
+            plugin.getPluginConfig().addTip("tip-id-" + i, i, "desc", "");
         }
 
         plugin.getTipManager().reload();

@@ -8,8 +8,6 @@ public interface Tip {
 
     int getWeight();
 
-    String getName();
-
     String getText();
 
     Reward getReward();
