@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/raidcraft/rctips/compare/v1.2.1...v1.3.0) (2021-01-17)
+
+
+### Features
+
+* Add command parser and improve config structure ([7b38d45](https://github.com/raidcraft/rctips/commit/7b38d452acad8d9c290f9c0a653be486ad766cc7))
+
 ## [1.2.1](https://github.com/raidcraft/rctips/compare/v1.2.0...v1.2.1) (2021-01-16)
 
 
