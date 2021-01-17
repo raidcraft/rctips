@@ -35,7 +35,8 @@ public final class Messages {
 
         public static final TextColor PREFIX = LIGHT_PURPLE;
         public static final TextColor TIPP_TEXT = AQUA;
-        public static final TextColor ACCEPT_BUTTON = RED;
+        public static final TextColor ACCEPT_BUTTON = GREEN;
+        public static final TextColor ACCEPT_BUTTON_DISABLED = RED;
         public static final TextColor REWARD_TOOLTIP_DESC = YELLOW;
         public static final TextColor REWARD_TOOLTIP_DESC_ACCENT = GREEN;
         public static final TextColor ACCEPT_MESSAGE = GREEN;
@@ -166,14 +167,14 @@ public final class Messages {
 
         Reward reward = tip.getReward();
         if(!RCTips.instance().getTipManager().hasAccepted(tip, player.getUniqueId())) {
-            TextComponent textComponent = text("OK", ACCEPT_BUTTON, ITALIC, BOLD, UNDERLINED)
+            TextComponent textComponent = text("[OK]", ACCEPT_BUTTON, ITALIC)
                     .hoverEvent(rewardInfo(reward));
 
             ClickEvent acceptEvent = runCommand(
                     PlayerCommands.acceptTip() + " " + tip.getId() + " " + player.getName());
             builder.append(textComponent.clickEvent(acceptEvent));
         } else {
-            builder.append(text("OK", ACCEPT_BUTTON, ITALIC, BOLD, STRIKETHROUGH)
+            builder.append(text("[OK]", ACCEPT_BUTTON_DISABLED, STRIKETHROUGH)
                     .hoverEvent(
                             showText(text("Du hast diesen Tipp bereits akzeptiert", ALREADY_ACCEPTED))));
         }
