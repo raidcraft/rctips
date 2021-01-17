@@ -1,8 +1,10 @@
-package de.raidcraft.template;
+package de.raidcraft.rctips;
 
 import co.aikar.commands.PaperCommandManager;
-import de.raidcraft.template.commands.AdminCommands;
-import de.raidcraft.template.commands.PlayerCommands;
+import de.raidcraft.rctips.commands.AdminCommands;
+import de.raidcraft.rctips.commands.PlayerCommands;
+import de.raidcraft.rctips.manager.TipManager;
+import de.raidcraft.rctips.tables.TAcceptedTip;
 import io.ebean.Database;
 import kr.entree.spigradle.annotations.PluginMain;
 import lombok.AccessLevel;
@@ -18,11 +20,11 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import java.io.File;
 
 @PluginMain
-public class PluginTemplate extends JavaPlugin {
+public class RCTips extends JavaPlugin {
 
     @Getter
     @Accessors(fluent = true)
-    private static PluginTemplate instance;
+    private static RCTips instance;
 
     private Database database;
     @Getter
@@ -32,13 +34,16 @@ public class PluginTemplate extends JavaPlugin {
     private PaperCommandManager commandManager;
 
     @Getter
+    private TipManager tipManager;
+
+    @Getter
     private static boolean testing = false;
 
-    public PluginTemplate() {
+    public RCTips() {
         instance = this;
     }
 
-    public PluginTemplate(
+    public RCTips(
             JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
         instance = this;
@@ -50,6 +55,9 @@ public class PluginTemplate extends JavaPlugin {
 
         loadConfig();
         setupDatabase();
+
+        tipManager = new TipManager(this);
+
         if (!testing) {
             setupListener();
             setupCommands();
@@ -59,6 +67,7 @@ public class PluginTemplate extends JavaPlugin {
     public void reload() {
 
         loadConfig();
+        tipManager.reload();
     }
 
     private void loadConfig() {
@@ -85,7 +94,7 @@ public class PluginTemplate extends JavaPlugin {
 
         this.database = new EbeanWrapper(Config.builder(this)
                 .entities(
-                        // TODO: add your database entities here
+                        TAcceptedTip.class
                 )
                 .build()).connect();
     }
