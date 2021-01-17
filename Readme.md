@@ -17,7 +17,7 @@ Benötigt die Permission ``rctips.admin.purge``
 
 ## Permissions
 
-Damit Spieler Tipps erhalten muss dieser die Permission ``rctips.tip.receive`` gesetzt haben.
+Nur Spieler mit der Permission ``rctips.tip.receive`` erhalten Tipps.
 
 ## Konfiguration
 
