@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/raidcraft/rctips/compare/v1.3.0...v1.3.1) (2021-01-17)
+
+
+### Bug Fixes
+
+* Change color of OK-Button to green and add brackets to symbolize button character. Fixes [#11](https://github.com/raidcraft/rctips/issues/11) ([145baa8](https://github.com/raidcraft/rctips/commit/145baa8098784ce2aaccb0cb50f519aa2228bd1d))
+
 # [1.3.0](https://github.com/raidcraft/rctips/compare/v1.2.1...v1.3.0) (2021-01-17)
 
 
