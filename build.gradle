@@ -60,7 +60,7 @@ repositories {
 dependencies {
     compileOnly spigot(mcVersion)
 
-    implementation 'net.silthus:ebean-wrapper:2.8.1'
+    implementation 'net.silthus:ebean-wrapper:2.9.1'
     implementation 'net.silthus.configlib:configlib-bukkit:2.6.0'
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.1'
@@ -73,7 +73,7 @@ dependencies {
 
     implementation group: 'io.art-framework', name: 'art-core', version: '1.0.0-beta.30'
 
-    testImplementation 'io.ebean:ebean-test:12.6.5'
+    testImplementation 'io.ebean:ebean-test:12.6.6'
 
     testImplementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
     testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
