@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/raidcraft/rctips/compare/v1.3.1...v1.3.2) (2021-02-11)
+
+
+### Bug Fixes
+
+* shade complete text library ([bcbd391](https://github.com/raidcraft/rctips/commit/bcbd3913d55d4670617f93412009bc80c5840443))
+
 ## [1.3.1](https://github.com/raidcraft/rctips/compare/v1.3.0...v1.3.1) (2021-01-17)
 
 
