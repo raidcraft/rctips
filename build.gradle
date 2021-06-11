@@ -63,7 +63,7 @@ dependencies {
     implementation 'net.silthus:ebean-wrapper:2.9.1'
     implementation 'net.silthus.configlib:configlib-bukkit:2.6.0'
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
 
     implementation group: 'net.kyori', name: 'adventure-text-feature-pagination', version: '4.0.0-SNAPSHOT'
     implementation group: 'net.kyori', name: 'adventure-text-serializer-plain', version: '4.6.0'
@@ -73,7 +73,7 @@ dependencies {
 
     implementation group: 'io.art-framework', name: 'art-core', version: '4.5.4'
 
-    testImplementation 'io.ebean:ebean-test:12.8.1'
+    testImplementation 'io.ebean:ebean-test:12.9.2'
 
     testImplementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
     testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
