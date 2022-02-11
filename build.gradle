@@ -9,7 +9,7 @@ plugins {
     id 'java' 
     id 'jacoco'
     id 'idea'
-    id 'io.freefair.lombok' version '5.3.3.3'
+    id 'io.freefair.lombok' version '6.4.0'
     id 'io.ebean' version '12.15.0'
     id 'kr.entree.spigradle' version '2.2.3'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
@@ -63,7 +63,7 @@ dependencies {
     implementation 'net.silthus:ebean-wrapper:2.9.1'
     implementation 'net.silthus.configlib:configlib-bukkit:2.6.0'
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.1'
 
     implementation group: 'net.kyori', name: 'adventure-text-feature-pagination', version: '4.0.0-SNAPSHOT'
     implementation group: 'net.kyori', name: 'adventure-text-serializer-plain', version: '4.8.1'
